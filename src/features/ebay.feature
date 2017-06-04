@@ -3,7 +3,7 @@ Feature: New customer item search. Ensure ebay sorting and filtering functionali
   Scenario: Filter by all listings
     Given A new customer is on the ebay main page
     When the customer searches for a new item e.g. "Android"
-#    And the customer selects the time ending soonest sort
+    And the customer selects the time ending soonest sort
     Then the first result should have free postage
     And the given price is shown
 

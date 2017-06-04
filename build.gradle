@@ -2,8 +2,8 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 
 //build stuff
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 def cucumberVersion = "1.2.4"
 
@@ -23,7 +23,7 @@ task cucumber() {
         javaexec {
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime
-            args = ['--plugin', 'pretty', '--glue', 'src/test/groovy', 'src/test/resources']
+            args = ['--plugin', 'pretty', '--glue', 'src/steps', 'src/features']
 
         }
     }
