@@ -20,12 +20,15 @@ When(~/^the customer searches for a new item e\.g\. "([^"]*)"$/) { String arg1 -
 }
 
 When(~/^the customer clicks on the Auction filter$/) { ->
-    driver.findElement(By.xpath(".//*[@id='cbelm']/div[1]/div[2]/span")).click()
+//    driver.findElement(By.xpath(".//*[@id='cbelm']/div[1]/div[2]/span")).click()
+    driver.findElement(By.cssSelector(".tgl_button.center_b")).click()
 }
 
 When(~/^the customer clicks on the Buy it now filter$/) { ->
-  driver.findElement(By.xpath(".//*[@id='cbelm']/div[1]/div[2]/a[2]")).click()
+//  driver.findElement(By.xpath(".//*[@id='cbelm']/div[1]/div[2]/a[2]")).click()
+  driver.findElement(By.cssSelector(".tgl_button.last_b")).click()
 }
+
 When(~/^the customer selects the time ending soonest sort$/) { ->
   def dropdown = driver.findElement(By.id("DashSortByContainer"))
   dropdown.click()
@@ -34,20 +37,26 @@ When(~/^the customer selects the time ending soonest sort$/) { ->
 
 Then(~/^the first result should have free postage$/) { ->
   shippingtext = driver.findElement(By.xpath(".//*[starts-with(@id, 'item')]/ul[1]/li[3]/span/span/span"))
-  assert (shippingtext.text == "Free international shipping")
+  assert (shippingtext.text.toLowerCase() == "free international shipping")
+}
+
+def String getFirstItemFormat(driver) {
+  firstitem = driver.findElement(By.xpath(".//*[starts-with(@id, 'item')]"))
+  itemformat = firstitem.findElement(By.cssSelector(".lvformat"))
+  println itemformat.text.toLowerCase()
+  return itemformat.text.toLowerCase()
 }
 
 Then(~/^the result should show the number of bids$/) {  ->
-  numberofbids = driver.findElement(By.xpath(".//*[starts-with(@id, 'item')]/ul[1]/li[2]/span"))
-  assert (numberofbids.text != ~/^bids$/)
+  assert (getFirstItemFormat(driver) != ~/^bids$/)
 }
 
 Then(~/^the result should show the buy it now option$/) { ->
-  buyitnow = driver.findElement(By.xpath(".//*[starts-with(@id, 'item')]/ul[1]/li[2]/span"))
-  assert (buyitnow.text == "Buy It Now")
+  assert (getFirstItemFormat(driver) == "buy it now")
 }
 
 Then(~/^the given price is shown$/) { ->
-  priceshown = driver.findElement(By.xpath(".//*[starts-with(@id, 'item')]/ul[1]/li[1]/span/span"))
+  firstitem = driver.findElement(By.xpath(".//*[starts-with(@id, 'item')]"))
+  priceshown = firstitem.findElement(By.cssSelector(".lvprice"))
   assert ( priceshown.text != "" )
 }
