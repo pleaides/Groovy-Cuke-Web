@@ -35,6 +35,13 @@ When(~/^the customer selects the time ending soonest sort$/) { ->
   driver.findElement(By.linkText("Time: ending soonest"))
 }
 
+When(~/^clicks on the next page button$/) { ->
+  landingPageNumber = driver.findElement(By.cssSelector(".pg.curr")).text.toInteger()
+  driver.findElement(By.cssSelector(".pagn-next")).click()
+  currentPage = driver.findElement(By.cssSelector(".pg.curr"))
+  assert ( (currentPage.text.toInteger() - landingPageNumber) == 1)
+}
+
 Then(~/^the first result should have free postage$/) { ->
   shippingtext = driver.findElement(By.xpath(".//*[starts-with(@id, 'item')]/ul[1]/li[3]/span/span/span"))
   assert (shippingtext.text.toLowerCase() == "free international shipping")

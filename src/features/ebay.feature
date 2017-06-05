@@ -32,3 +32,11 @@ Feature: New customer item search. Ensure ebay sorting and filtering functionali
     Then the first result should have free postage
     And the result should show the buy it now option
     And the given price is shown
+
+  Scenario: Page next
+    Given A new customer is on the ebay main page
+    When the customer searches for a new item e.g. "Razer"
+    And the customer selects the time ending soonest sort
+    And clicks on the next page button
+    Then the first result should have free postage
+    And the given price is shown
