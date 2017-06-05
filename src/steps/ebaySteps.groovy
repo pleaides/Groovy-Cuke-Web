@@ -13,9 +13,9 @@ Given(~/^A new customer is on the ebay main page$/) { ->
   driver.get("http://www.ebay.com")
 }
 
-When(~/^the customer searches for a new item e\.g\. "([^"]*)"$/) { String arg1 ->
+When(~/^the customer searches for a new item e\.g\. "([^"]*)"$/) { String searchTerm ->
   searchField = driver.findElement(By.id("gh-ac"))
-  searchField.sendKeys(arg1)
+  searchField.sendKeys(searchTerm)
   searchField.submit()
 }
 
@@ -37,18 +37,19 @@ When(~/^clicks on the next page button$/) { ->
   landingPageNumber = driver.findElement(By.cssSelector(".pg.curr")).text.toInteger()
   driver.findElement(By.cssSelector(".pagn-next")).click()
   currentPage = driver.findElement(By.cssSelector(".pg.curr"))
-  assert ( (currentPage.text.toInteger() - landingPageNumber) == 1)
+  hasPageIncremented = currentPage.text.toInteger() - landingPageNumber
+  assert ( hasPageIncremented == 1)
 }
 
 Then(~/^the first result should have free postage$/) { ->
-  shippingtext = driver.findElement(By.xpath(".//*[starts-with(@id, 'item')]/ul[1]/li[3]/span/span/span"))
+  shippingXpath = ".//*[starts-with(@id, 'item')]/ul[1]/li[3]/span/span/span"
+  shippingtext = driver.findElement(By.xpath(shippingXpath))
   assert (shippingtext.text.toLowerCase() == "free international shipping")
 }
 
 def String getFirstItemFormat(driver) {
   firstitem = driver.findElement(By.xpath(".//*[starts-with(@id, 'item')]"))
   itemformat = firstitem.findElement(By.cssSelector(".lvformat"))
-  println itemformat.text.toLowerCase()
   return itemformat.text.toLowerCase()
 }
 
@@ -67,15 +68,15 @@ Then(~/^the result should( | not )show the buy it now option$/) { String isNot -
 Then(~/^the given price is shown$/) { ->
   firstitem = driver.findElement(By.xpath(".//*[starts-with(@id, 'item')]"))
   priceshown = firstitem.findElement(By.cssSelector(".lvprice"))
-  assert ( priceshown.text != "" )
+  assert ( priceshown.text.isEmpty() == false)
 }
 
-Then (~/^the customer selects category "([^"]*)"$/) { String arg1 ->
+Then (~/^the customer selects category "([^"]*)"$/) { String searchCategory ->
   categoryAll = driver.findElement(By.cssSelector(".cat-c"))
   categoryItems = categoryAll.findElements(By.cssSelector(".cat-link a"))
   for ( categoryItem in categoryItems ) {
     categoryText = categoryItem.text.toLowerCase()
-    if ( categoryText == arg1.toLowerCase() ) {
+    if ( categoryText == searchCategory.toLowerCase() ) {
       categoryItem.click()
       break
     }
