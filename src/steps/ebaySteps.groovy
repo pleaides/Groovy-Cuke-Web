@@ -20,12 +20,10 @@ When(~/^the customer searches for a new item e\.g\. "([^"]*)"$/) { String arg1 -
 }
 
 When(~/^the customer clicks on the Auction filter$/) { ->
-//    driver.findElement(By.xpath(".//*[@id='cbelm']/div[1]/div[2]/span")).click()
     driver.findElement(By.cssSelector(".tgl_button.center_b")).click()
 }
 
 When(~/^the customer clicks on the Buy it now filter$/) { ->
-//  driver.findElement(By.xpath(".//*[@id='cbelm']/div[1]/div[2]/a[2]")).click()
   driver.findElement(By.cssSelector(".tgl_button.last_b")).click()
 }
 
