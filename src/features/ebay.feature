@@ -13,12 +13,22 @@ Feature: New customer item search. Ensure ebay sorting and filtering functionali
     And the customer clicks on the Auction filter
     Then the first result should have free postage
     And the result should show the number of bids
+    And the result should not show the buy it now option
     And the given price is shown
 
   Scenario: Filter by Buy it now
     Given A new customer is on the ebay main page
     When the customer searches for a new item e.g. "iPhone"
     And the customer clicks on the Buy it now filter
+    Then the first result should have free postage
+    And the result should show the buy it now option
+    And the given price is shown
+
+  Scenario: Select Category
+    Given A new customer is on the ebay main page
+    When the customer searches for a new item e.g. "iPhone"
+    And the customer clicks on the Buy it now filter
+    And the customer selects category "Cell Phone Accessories"
     Then the first result should have free postage
     And the result should show the buy it now option
     And the given price is shown

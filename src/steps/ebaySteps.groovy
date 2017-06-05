@@ -48,15 +48,33 @@ def String getFirstItemFormat(driver) {
 }
 
 Then(~/^the result should show the number of bids$/) {  ->
-  assert (getFirstItemFormat(driver) != ~/^bids$/)
+  assert (getFirstItemFormat(driver) =~ /(\d+) bid(s?)/)
 }
 
-Then(~/^the result should show the buy it now option$/) { ->
-  assert (getFirstItemFormat(driver) == "buy it now")
+Then(~/^the result should( | not )show the buy it now option$/) { String isNot ->
+  if (isNot != " ") {
+    assert (getFirstItemFormat(driver) != "buy it now")
+  } else {
+    assert (getFirstItemFormat(driver) == "buy it now")
+  }
 }
 
 Then(~/^the given price is shown$/) { ->
   firstitem = driver.findElement(By.xpath(".//*[starts-with(@id, 'item')]"))
   priceshown = firstitem.findElement(By.cssSelector(".lvprice"))
   assert ( priceshown.text != "" )
+}
+
+Then (~/^the customer selects category "([^"]*)"$/) { String arg1 ->
+  categoryAll = driver.findElement(By.cssSelector(".cat-c"))
+  categoryItems = categoryAll.findElements(By.cssSelector(".cat-link a"))
+  for ( categoryItem in categoryItems ) {
+    categoryText = categoryItem.text.toLowerCase()
+    if ( categoryText == arg1.toLowerCase() ) {
+      categoryItem.click()
+      break
+    }
+  }
+  newlySelectedCategory = driver.findElement(By.cssSelector(".cat-t .cat-app"))
+  assert ( newlySelectedCategory.text.toLowerCase() == categoryText )
 }
